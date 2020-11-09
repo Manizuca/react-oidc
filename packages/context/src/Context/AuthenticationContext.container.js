@@ -74,9 +74,9 @@ const AuthenticationProviderInt = ({
   useEffect(() => {
     setLogger(otherProps.loggerLevel, otherProps.logger);
     dispatch({ type: 'ON_LOADING' });
-    addOidcEvents(oidcState.userManager.events, dispatch, oidcState.userManager);
+    addOidcEvents(oidcState.userManager.events, dispatch, oidcState.userManager, location, history);
     oidcState.userManager.getUser().then(user => dispatch({ type: 'ON_LOAD_USER', user }));
-    return () => removeOidcEvents(oidcState.userManager.events, dispatch, oidcState.userManager);
+    return () => removeOidcEvents(oidcState.userManager.events, dispatch, oidcState.userManager, location, history);
   }, [otherProps.logger, otherProps.loggerLevel, oidcState.userManager]);
 
   const { oidcUser, isLoading, error, isEnabled } = oidcState;

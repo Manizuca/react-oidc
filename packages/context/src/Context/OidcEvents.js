@@ -29,26 +29,26 @@ export const onUserUnloaded = dispatch => () => {
   dispatch({ type: 'ON_UNLOAD_USER' });
 };
 
-export const onAccessTokenExpired = (dispatch, userManager) => async () => {
+export const onAccessTokenExpired = (dispatch, userManager, location, history) => async () => {
   oidcLog.info(`AccessToken Expired `);
   dispatch({ type: 'ON_UNLOAD_USER' });
-  await userManager.signinSilent();
+  await authenticateUser(userManager, location, history)();
 };
 
-export const addOidcEvents = (events, dispatch, userManager) => {
+export const addOidcEvents = (events, dispatch, userManager, location, history) => {
   events.addUserLoaded(onUserLoaded(dispatch));
   events.addSilentRenewError(onError(dispatch));
   events.addUserUnloaded(onUserUnloaded(dispatch));
   events.addUserSignedOut(onUserUnloaded(dispatch));
-  events.addAccessTokenExpired(onAccessTokenExpired(dispatch, userManager));
+  events.addAccessTokenExpired(onAccessTokenExpired(dispatch, userManager, location, history));
 };
 
-export const removeOidcEvents = (events, dispatch, userManager) => {
+export const removeOidcEvents = (events, dispatch, userManager, location, history) => {
   events.removeUserLoaded(onUserLoaded(dispatch));
   events.removeSilentRenewError(onError(dispatch));
   events.removeUserUnloaded(onUserUnloaded(dispatch));
   events.removeUserSignedOut(onUserUnloaded(dispatch));
-  events.removeAccessTokenExpired(onAccessTokenExpired(dispatch, userManager));
+  events.removeAccessTokenExpired(onAccessTokenExpired(dispatch, userManager, location, history));
 };
 
 export const oidcReducer = (oidcState, action) =>
